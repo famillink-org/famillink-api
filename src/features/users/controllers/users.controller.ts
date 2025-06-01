@@ -1,17 +1,14 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   Get,
-  Logger,
   Param,
   Post,
   Put,
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { UserService } from '../../../core/data/user/services/user.service';
 import { UserEntity } from '../../../core/data/user/entities/user.entity';
 import { Roles } from '../../../core/decorators/roles.decorator';
 import { RolesGuard } from '../../auth/guards/roles.guard';
@@ -35,12 +32,7 @@ import { InactivatedCauseDto } from '../dto/inactivated-cause.dto';
 @ApiBearerAuth()
 @Controller('users')
 export class UsersController {
-  private readonly logger = new Logger(UsersController.name);
-
-  constructor(
-    private readonly userService: UserService,
-    private readonly userEngineService: UsersEngineService,
-  ) {}
+  constructor(private readonly userEngineService: UsersEngineService) {}
 
   @Post()
   @UseGuards(RolesGuard)
@@ -70,8 +62,7 @@ export class UsersController {
     description: 'Forbidden - Requires SuperAdmin role',
   })
   async create(@Body() user: UserEntity): Promise<{ id: number }> {
-    const id = await this.userService.create(user);
-    return { id };
+    return await this.userEngineService.createUser(user);
   }
 
   @Get()
@@ -96,29 +87,7 @@ export class UsersController {
   async getAllFilteredAnsSortedByPage(
     @Query() paginationParams: PaginationParamsDto,
   ): Promise<PaginatedResponseDto<UserListItemDto>> {
-    try {
-      // Apply default values if not provided
-      const params: PaginationParamsDto = {
-        page: paginationParams.page || 1,
-        limit: paginationParams.limit || 10,
-        sortBy: paginationParams.sortBy || 'id',
-        sortDirection: paginationParams.sortDirection || 'ASC',
-        search: paginationParams.search,
-      };
-
-      return await this.userEngineService.getPaginatedUsers(params);
-    } catch (error) {
-      this.logger.error(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        `Error retrieving users: ${error.message}`,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        error.stack,
-      );
-      throw new BadRequestException(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        `Error retrieving users: ${error.message}`,
-      );
-    }
+    return await this.userEngineService.getPaginatedUsers(paginationParams);
   }
 
   @Get(':id')
@@ -138,12 +107,7 @@ export class UsersController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findOne(@Param('id') id: number): Promise<UserDto> {
-    return await this.userService.read(id).then((user) => {
-      if (!user) {
-        throw new BadRequestException(`User ${id} not found`);
-      }
-      return UserDto.fromEntity(user);
-    });
+    return await this.userEngineService.getUserById(id);
   }
 
   @Get('username/:username')
@@ -163,12 +127,7 @@ export class UsersController {
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async findByUsername(@Param('username') username: string): Promise<UserDto> {
-    return await this.userService.findByUserName(username).then((user) => {
-      if (!user) {
-        throw new BadRequestException(`User ${username} not found`);
-      }
-      return UserDto.fromEntity(user);
-    });
+    return await this.userEngineService.getUserByUsername(username);
   }
 
   @Put(':id')
@@ -192,8 +151,7 @@ export class UsersController {
     @Param('id') id: number,
     @Body() user: UserEntity,
   ): Promise<void> {
-    user.id = +id;
-    return await this.userService.update(user);
+    return await this.userEngineService.updateUser(id, user);
   }
 
   @Put('deactivate/:id')
@@ -217,14 +175,7 @@ export class UsersController {
     @Param('id') id: number,
     @Body() cause: InactivatedCauseDto,
   ): Promise<void> {
-    const user = await this.userService.read(id);
-    if (!user) {
-      throw new BadRequestException(`User ${id} not found`);
-    }
-    user.causeOfInactivation = cause.cause;
-    user.inactivatedDate = new Date();
-    user.inactivated = true;
-    return await this.userService.update(user);
+    return await this.userEngineService.deactivateUser(id, cause);
   }
 
   @Put('reactivate/:id')
@@ -244,14 +195,7 @@ export class UsersController {
     description: 'Forbidden - Requires SuperAdmin role',
   })
   async reactivate(@Param('id') id: number): Promise<void> {
-    const user = await this.userService.read(id);
-    if (!user) {
-      throw new BadRequestException(`User ${id} not found`);
-    }
-    user.causeOfInactivation = undefined;
-    user.inactivatedDate = undefined;
-    user.inactivated = false;
-    return await this.userService.update(user);
+    return await this.userEngineService.reactivateUser(id);
   }
 
   @Delete(':id')
@@ -270,6 +214,6 @@ export class UsersController {
   })
   @ApiResponse({ status: 404, description: 'User not found' })
   async delete(@Param('id') id: number): Promise<void> {
-    return await this.userService.delete(id);
+    return await this.userEngineService.deleteUser(id);
   }
 }
