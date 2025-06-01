@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { MemberService } from '../../../core/data/member/services/member.service';
-import { UserService } from 'src/core/data/user/services/user.service';
-import { TokenEngineService } from 'src/core/token/token.engine.service';
+import { UserService } from '../../../core/data/user/services/user.service';
+import { TokenEngineService } from '../../../core/token/token.engine.service';
 import { ConfigService } from '@nestjs/config';
-import { MailsService } from 'src/core/mails/mails.service';
+import { MailsService } from '../../../core/mails/mails.service';
 import { ImportResultDto } from '../../../core/dto/import-result.dto';
-import { MemberEntity } from 'src/core/data/member/entities/member.entity';
+import { MemberEntity } from '../../../core/data/member/entities/member.entity';
 import { ERelationType } from '../../../core/data/member/entities/enum-relation-type';
 import { MembersRelationsEntity } from '../../../core/data/member/entities/member-relation.entity';
 import { AddressEntity } from '../../../core/data/member/entities/address.entity';
