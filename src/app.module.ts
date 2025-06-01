@@ -8,6 +8,8 @@ import { AuthModule } from './features/auth/auth.module';
 import { UsersModule } from './features/users/users.module';
 import { MembersModule } from './features/members/members.module';
 import { validate } from './env.validation';
+import { AppController } from './app.controller';
+import { ImportModule } from './features/import/import.module';
 
 @Module({
   imports: [
@@ -21,7 +23,9 @@ import { validate } from './env.validation';
     TokensModule,
     AuthModule,
     MembersModule,
+    ImportModule,
     UsersModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}
