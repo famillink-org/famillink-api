@@ -57,6 +57,35 @@ $ pnpm run test:e2e
 $ pnpm run test:cov
 ```
 
+## CI/CD Pipeline
+
+This project uses GitHub Actions for continuous integration and deployment. The workflow is defined in `.github/workflows/ci.yml` and includes the following steps:
+
+1. **Linting**: Checks code quality using ESLint
+2. **Testing**: Runs unit tests with Jest
+3. **E2E Testing**: Runs end-to-end tests with a MySQL database
+4. **Building**: Builds the application for production
+
+The workflow is triggered on push and pull requests to the main, master, and develop branches.
+
+### Running the CI/CD Pipeline Locally
+
+You can run the same checks locally before pushing your code:
+
+```bash
+# Run linting
+$ pnpm lint
+
+# Run unit tests
+$ pnpm test
+
+# Run e2e tests (requires MySQL)
+$ pnpm test:e2e
+
+# Build the application
+$ pnpm build
+```
+
 ## Deployment
 
 When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
