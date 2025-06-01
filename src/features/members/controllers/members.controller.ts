@@ -19,7 +19,7 @@ import { PaginationParamsDto } from '../../../core/dto/pagination-params.dto';
 import { PaginatedResponseDto } from '../../../core/dto/paginated-response.dto';
 import { MemberListItemDto } from '../dto/member-list-item.dto';
 
-@ApiTags('Membres')
+@ApiTags('Members')
 @Controller('members')
 @ApiBearerAuth()
 @UseGuards(AuthGuard, RolesGuard)
@@ -29,13 +29,18 @@ export class MembersController {
   constructor(private readonly memberEngineService: MembersEngineService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Récupérer une liste paginée de membres' })
+  @ApiOperation({
+    summary: 'Get paginated list of members',
+    description:
+      'Retrieves a paginated list of members with filtering and sorting options',
+  })
   @ApiResponse({
     status: 200,
-    description: 'Liste des membres récupérée avec succès',
+    description: 'Members list successfully retrieved',
     type: PaginatedResponseDto,
   })
-  @ApiResponse({ status: 401, description: 'Non autorisé' })
+  @ApiResponse({ status: 400, description: 'Bad request' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async getMembers(
     @Query() paginationParams: PaginationParamsDto,
   ): Promise<PaginatedResponseDto<MemberListItemDto>> {
@@ -53,13 +58,13 @@ export class MembersController {
     } catch (error) {
       this.logger.error(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        `Erreur lors de la récupération des membres: ${error.message}`,
+        `Error retrieving members: ${error.message}`,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         error.stack,
       );
       throw new BadRequestException(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        `Erreur lors de la récupération des membres: ${error.message}`,
+        `Error retrieving members: ${error.message}`,
       );
     }
   }

@@ -38,19 +38,22 @@ export class ImportController {
 
   @Post('members')
   @Roles(ERole.Admin)
-  @ApiOperation({ summary: 'Importer des membres depuis un fichier CSV' })
+  @ApiOperation({
+    summary: 'Import members from CSV file',
+    description: 'Imports members from a CSV file. Requires Admin role.',
+  })
   @ApiConsumes('multipart/form-data')
   @ApiResponse({
     status: 201,
-    description: 'Import réalisé avec succès',
+    description: 'Import completed successfully',
     type: ImportResultDto,
   })
   @ApiResponse({
     status: 400,
-    description: 'Fichier invalide ou erreur de traitement',
+    description: 'Invalid file or processing error',
   })
-  @ApiResponse({ status: 401, description: 'Non autorisé' })
-  @ApiResponse({ status: 403, description: 'Accès interdit' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 403, description: 'Forbidden - Requires Admin role' })
   @UseInterceptors(
     FileInterceptor('file', {
       storage: diskStorage({
@@ -67,20 +70,20 @@ export class ImportController {
         },
       }),
       fileFilter: (req, file, cb) => {
-        // Vérifier le type de fichier
+        // Check file type
         if (
           file.mimetype !== 'text/csv' &&
           !file.originalname.endsWith('.csv')
         ) {
           return cb(
-            new BadRequestException('Seuls les fichiers CSV sont acceptés'),
+            new BadRequestException('Only CSV files are accepted'),
             false,
           );
         }
         cb(null, true);
       },
       limits: {
-        fileSize: 10 * 1024 * 1024, // 10 Mo
+        fileSize: 10 * 1024 * 1024, // 10 MB
       },
     }),
   )
@@ -88,7 +91,7 @@ export class ImportController {
     @UploadedFile() file: Express.Multer.File,
   ): Promise<ImportResultDto> {
     if (!file) {
-      throw new BadRequestException('Aucun fichier fourni');
+      throw new BadRequestException('No file provided');
     }
 
     const result: ImportResultDto = {
@@ -103,7 +106,7 @@ export class ImportController {
       const filePath = file.path;
       const rows: any[] = [];
 
-      // Lire et parser le fichier CSV
+      // Read and parse the CSV file
       await new Promise<void>((resolve, reject) => {
         fs.createReadStream(filePath)
           .pipe(csv())
@@ -112,7 +115,7 @@ export class ImportController {
           .on('error', (error) =>
             reject(
               new BadRequestException(
-                `Erreur lors de l'analyse du CSV: ${error.message}`,
+                `Error parsing CSV file: ${error.message}`,
               ),
             ),
           );
@@ -120,39 +123,37 @@ export class ImportController {
 
       const codes: string[] = new Array<string>();
 
-      // Traiter chaque ligne du CSV
+      // Process each row of the CSV
       for (let i = 0; i < rows.length; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
         await this.importEngineService.createOrUpdateMember(i, rows[i], result);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-argument
         codes.push(rows[i].code);
       }
 
-      // Traiter les codes pour créer les relations entre membres
+      // Process codes to create relationships between members
       for (let i = 0; i < rows.length; i++) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
         await this.importEngineService.addOrUpdateRelation(i, codes[i], result);
       }
 
-      // Supprimer le fichier temporaire
+      // Delete the temporary file
       fs.unlinkSync(filePath);
 
       return result;
     } catch (error) {
-      // Nettoyer le fichier temporaire en cas d'erreur
+      // Clean up the temporary file in case of error
       if (file.path && fs.existsSync(file.path)) {
         fs.unlinkSync(file.path);
       }
 
       this.logger.error(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        `Erreur lors de l'importation des membres: ${error.message}`,
+        `Error importing members: ${error.message}`,
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         error.stack,
       );
       throw new BadRequestException(
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        `Erreur lors de l'importation des membres: ${error.message}`,
+        `Error importing members: ${error.message}`,
       );
     }
   }
