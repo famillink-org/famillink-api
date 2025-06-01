@@ -39,7 +39,7 @@ export class AuthService {
         : user.userName,
       role: user.role,
       memberId: user.member?.id,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
+
       token: await this.jwtService.signAsync(payload),
     };
   }
