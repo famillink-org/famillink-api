@@ -10,13 +10,16 @@ import { MembersModule } from './features/members/members.module';
 import { validate } from './env.validation';
 import { AppController } from './app.controller';
 import { ImportModule } from './features/import/import.module';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       validate,
+      load: [configuration],
     }),
+    // Logger is configured in main.ts based on environment
     CryptoModule,
     DataModule,
     MailsModule.forRoot(),
