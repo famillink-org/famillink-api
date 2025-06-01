@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Liquid } from 'liquidjs';
 import { IMailsTemplateEngine } from '../../mails-interface/mails-template.engine.interface';
+import { InternalServerErrorException } from '../../exceptions';
 
 @Injectable()
 export class LiquidTemplateEngine implements IMailsTemplateEngine {
@@ -19,7 +20,9 @@ export class LiquidTemplateEngine implements IMailsTemplateEngine {
     } catch (error: unknown) {
       const errorMessage =
         error instanceof Error ? error.message : String(error);
-      throw new Error(`Template rendering failed: ${errorMessage}`);
+      throw new InternalServerErrorException(
+        `Template rendering failed: ${errorMessage}`,
+      );
     }
   }
   async renderSubject(

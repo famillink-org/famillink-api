@@ -3,7 +3,6 @@ import {
   Post,
   UploadedFile,
   UseInterceptors,
-  BadRequestException,
   UseGuards,
   Logger,
 } from '@nestjs/common';
@@ -26,6 +25,7 @@ import { Roles } from '../../../core/decorators/roles.decorator';
 import { ERole } from '../../../core/data/user/entities/enum-role';
 import { ImportResultDto } from '../../../core/dto/import-result.dto';
 import { ImportEngineService } from '../services/import.engine.service';
+import { BadRequestException } from '../../../core/exceptions';
 
 @ApiTags('Import')
 @Controller('import')

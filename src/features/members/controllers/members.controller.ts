@@ -1,11 +1,4 @@
-import {
-  Controller,
-  Get,
-  BadRequestException,
-  UseGuards,
-  Logger,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, Logger, Query } from '@nestjs/common';
 import {
   ApiBearerAuth,
   ApiOperation,
@@ -18,6 +11,7 @@ import { AuthGuard } from '../../auth/guards/auth.guard';
 import { PaginationParamsDto } from '../../../core/dto/pagination-params.dto';
 import { PaginatedResponseDto } from '../../../core/dto/paginated-response.dto';
 import { MemberListItemDto } from '../dto/member-list-item.dto';
+import { BadRequestException } from '../../../core/exceptions';
 
 @ApiTags('Members')
 @Controller('members')

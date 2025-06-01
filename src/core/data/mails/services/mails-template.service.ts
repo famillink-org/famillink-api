@@ -1,8 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MailsTemplateEntity } from '../entities/mails-template.entity';
 import { IMailsTemplateService } from '../../../mails-interface/mails-template.service.interface';
+import { NotFoundException } from '../../../exceptions';
 
 @Injectable()
 export class MailsTemplateService implements IMailsTemplateService {

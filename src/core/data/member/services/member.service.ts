@@ -1,10 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { MemberEntity } from '../entities/member.entity';
 import { MembersRelationsEntity } from '../entities/member-relation.entity';
 import { PaginationParamsDto } from '../../../dto/pagination-params.dto';
 import { ERelationType } from '../entities/enum-relation-type';
+import { NotFoundException } from '../../../exceptions';
 
 @Injectable()
 export class MemberService {
