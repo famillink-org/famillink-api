@@ -1,11 +1,15 @@
 import { PaginatedResponseDto } from '../../../core/dto/paginated-response.dto';
 import { PaginationParamsDto } from '../../../core/dto/pagination-params.dto';
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UserService } from '../../../core/data/user/services/user.service';
 import { UserListItemDto } from '../dto/user-list-item.dto';
 import { UserEntity } from '../../../core/data/user/entities/user.entity';
 import { UserDto } from '../dto/user.dto';
 import { InactivatedCauseDto } from '../dto/inactivated-cause.dto';
+import {
+  BadRequestException,
+  NotFoundException,
+} from '../../../core/exceptions';
 
 /**
  * Service pour gérer la logique métier liée aux utilisateurs
@@ -43,7 +47,7 @@ export class UsersEngineService {
   async getUserById(id: number): Promise<UserDto> {
     const user = await this.userRepository.read(id);
     if (!user) {
-      throw new BadRequestException(`User ${id} not found`);
+      throw new NotFoundException(`User ${id} not found`);
     }
     return UserDto.fromEntity(user);
   }
@@ -58,7 +62,7 @@ export class UsersEngineService {
   async getUserByUsername(username: string): Promise<UserDto> {
     const user = await this.userRepository.findByUserName(username);
     if (!user) {
-      throw new BadRequestException(`User ${username} not found`);
+      throw new NotFoundException(`User ${username} not found`);
     }
     return UserDto.fromEntity(user);
   }
@@ -84,7 +88,7 @@ export class UsersEngineService {
   async deactivateUser(id: number, cause: InactivatedCauseDto): Promise<void> {
     const user = await this.userRepository.read(id);
     if (!user) {
-      throw new BadRequestException(`User ${id} not found`);
+      throw new NotFoundException(`User ${id} not found`);
     }
     user.causeOfInactivation = cause.cause;
     user.inactivatedDate = new Date();
@@ -101,7 +105,7 @@ export class UsersEngineService {
   async reactivateUser(id: number): Promise<void> {
     const user = await this.userRepository.read(id);
     if (!user) {
-      throw new BadRequestException(`User ${id} not found`);
+      throw new NotFoundException(`User ${id} not found`);
     }
     user.causeOfInactivation = undefined;
     user.inactivatedDate = undefined;

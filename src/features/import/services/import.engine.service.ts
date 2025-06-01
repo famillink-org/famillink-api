@@ -13,6 +13,7 @@ import { UserEntity } from '../../../core/data/user/entities/user.entity';
 import { ERole } from '../../../core/data/user/entities/enum-role';
 import { SocialNetworkEntity } from '../../../core/data/member/entities/social-network.entity';
 import { ESocialNetworkType } from '../../../core/data/member/entities/enum-social-network-type';
+import { NotFoundException } from '../../../core/exceptions';
 
 /**
  * Service pour gérer la logique métier liée aux importations de membres
@@ -96,7 +97,9 @@ export class ImportEngineService {
       // Récupérer le membre concerné
       const member = await this.memberService.readByCodeIfExist(memberCode);
       if (!member) {
-        throw new Error(`Membre avec le code ${memberCode} non trouvé`);
+        throw new NotFoundException(
+          `Membre avec le code ${memberCode} non trouvé`,
+        );
       }
 
       // Si le code est "0", c'est l'ancêtre commun, pas de relations à créer
@@ -112,7 +115,7 @@ export class ImportEngineService {
         // C'est un conjoint, trouver le membre correspondant au baseCode
         const baseMember = await this.memberService.readByCodeIfExist(baseCode);
         if (!baseMember) {
-          throw new Error(
+          throw new NotFoundException(
             `Membre principal avec le code ${baseCode} non trouvé pour le conjoint ${memberCode}`,
           );
         }
