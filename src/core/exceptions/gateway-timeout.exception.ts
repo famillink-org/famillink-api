@@ -11,10 +11,7 @@ export class GatewayTimeoutException extends BaseException {
    * @param message The error message
    * @param errorCode A custom error code for the client
    */
-  constructor(
-    message = 'Gateway timeout',
-    errorCode = 'GATEWAY_TIMEOUT',
-  ) {
+  constructor(message = 'Gateway timeout', errorCode = 'GATEWAY_TIMEOUT') {
     super(message, HttpStatus.GATEWAY_TIMEOUT, errorCode);
   }
 }
