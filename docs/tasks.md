@@ -4,9 +4,9 @@ This document contains a comprehensive list of improvement tasks for the FamilLi
 
 ## Architecture and Structure
 
-1. [ ] Implement a consistent layered architecture across all modules
-   - [ ] Move business logic from controllers to engine services
-   - [ ] Ensure all controller methods use engine services instead of directly using data services
+1. [x] Implement a consistent layered architecture across all modules
+   - [x] Move business logic from controllers to engine services
+   - [x] Ensure all controller methods use engine services instead of directly using data services
 
 2. [ ] Standardize error handling
    - [ ] Create custom exception classes for different error types
