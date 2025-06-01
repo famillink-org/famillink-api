@@ -23,22 +23,22 @@ This document contains a comprehensive list of improvement tasks for the FamilLi
 
 ## Configuration and Environment
 
-5. [ ] Complete environment variable validation
-   - [ ] Add missing environment variables to EnvironmentVariables class:
-     - [ ] APP_VERSION
-     - [ ] APP_COPYRIGHT
-     - [ ] APP_SUPPORT_EMAIL
-     - [ ] APP_FRONTEND_URL
-     - [ ] ENCRYPT_PASSWORD
-     - [ ] JWT_SECRET
-     - [ ] INTERNAL_API_KEY
-     - [ ] EMAIL_PROVIDER
-     - [ ] NEW_USER_LINK_DURATION
-     - [ ] PASSWORD_RESET_LINK_DURATION
+5. [x] Complete environment variable validation
+   - [x] Add missing environment variables to EnvironmentVariables class:
+     - [x] APP_VERSION
+     - [x] APP_COPYRIGHT
+     - [x] APP_SUPPORT_EMAIL
+     - [x] APP_FRONTEND_URL
+     - [x] ENCRYPT_PASSWORD
+     - [x] JWT_SECRET
+     - [x] INTERNAL_API_KEY
+     - [x] EMAIL_PROVIDER
+     - [x] NEW_USER_LINK_DURATION
+     - [x] PASSWORD_RESET_LINK_DURATION
 
-6. [ ] Implement environment-specific configurations
-   - [ ] Create separate configurations for development, testing, and production
-   - [ ] Configure logging levels based on environment
+6. [x] Implement environment-specific configurations
+   - [x] Create separate configurations for development, testing, and production
+   - [x] Configure logging levels based on environment
 
 ## Database and Data Access
 
