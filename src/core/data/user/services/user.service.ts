@@ -4,9 +4,10 @@ import { Repository } from 'typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { CryptoService } from '../../../crypto/crypto.service';
 import { PaginationParamsDto } from '../../../dto/pagination-params.dto';
+import { IUserService } from '../interfaces/user.service.interface';
 
 @Injectable()
-export class UserService {
+export class UserService implements IUserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,

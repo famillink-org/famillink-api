@@ -6,9 +6,10 @@ import { MembersRelationsEntity } from '../entities/member-relation.entity';
 import { PaginationParamsDto } from '../../../dto/pagination-params.dto';
 import { ERelationType } from '../entities/enum-relation-type';
 import { NotFoundException } from '../../../exceptions';
+import { IMemberService } from '../interfaces/member.service.interface';
 
 @Injectable()
-export class MemberService {
+export class MemberService implements IMemberService {
   constructor(
     @InjectRepository(MemberEntity)
     private readonly memberEntityRepository: Repository<MemberEntity>,

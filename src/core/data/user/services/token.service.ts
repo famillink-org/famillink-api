@@ -3,9 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { TokenEntity } from '../entities/token.entity';
 import { ETokenType } from '../entities/enum-token-type';
+import { ITokenService } from '../interfaces/token.service.interface';
 
 @Injectable()
-export class TokenService {
+export class TokenService implements ITokenService {
   constructor(
     @InjectRepository(TokenEntity)
     private readonly tokenRepository: Repository<TokenEntity>,
