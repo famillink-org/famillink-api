@@ -1,7 +1,8 @@
 import { PaginatedResponseDto } from '../../../core/dto/paginated-response.dto';
 import { PaginationParamsDto } from '../../../core/dto/pagination-params.dto';
-import { Injectable, Logger } from '@nestjs/common';
-import { UserService } from '../../../core/data/user/services/user.service';
+import { Injectable, Logger, Inject } from '@nestjs/common';
+import { IUserService } from '../../../core/data/user/interfaces/user.service.interface';
+import { USER_SERVICE_TOKEN } from '../../../core/data/user/interfaces/user.service.token';
 import { UserListItemDto } from '../dto/user-list-item.dto';
 import { UserEntity } from '../../../core/data/user/entities/user.entity';
 import { UserDto } from '../dto/user.dto';
@@ -24,7 +25,10 @@ import {
 export class UsersEngineService {
   private readonly logger = new Logger(UsersEngineService.name);
 
-  constructor(private readonly userRepository: UserService) {}
+  constructor(
+    @Inject(USER_SERVICE_TOKEN)
+    private readonly userRepository: IUserService,
+  ) {}
 
   /**
    * Crée un nouvel utilisateur

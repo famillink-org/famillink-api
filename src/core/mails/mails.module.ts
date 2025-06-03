@@ -9,6 +9,7 @@ import { MailsTemplateService } from '../data/mails/services/mails-template.serv
 import { DataModule } from '../data/data.module';
 import { INJECTION_TOKENS } from './injection-token';
 import { MailsService } from './mails.service';
+import { MAILS_TEMPLATE_SERVICE_TOKEN } from './interfaces/mails-template.service.token';
 
 @Module({})
 export class MailsModule {
@@ -33,6 +34,10 @@ export class MailsModule {
           useClass: LiquidTemplateEngine,
         },
         MailsTemplateService,
+        {
+          provide: MAILS_TEMPLATE_SERVICE_TOKEN,
+          useExisting: MailsTemplateService,
+        },
         {
           provide: INJECTION_TOKENS.TEMPLATE_REPOSITORY,
           useExisting: MailsTemplateService,
