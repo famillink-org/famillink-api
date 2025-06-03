@@ -18,9 +18,9 @@ This document contains a comprehensive list of improvement tasks for the FamilLi
   - [x] Consider splitting large modules into smaller, focused ones
   - [x] Implement the necessary changes
 
-4. [ ] Implement proper dependency injection
+4. [x] Implement proper dependency injection
    - [x] Avoid direct access to process.env, use ConfigService instead
-   - [ ] Use interfaces for service dependencies to improve testability
+   - [x] Use interfaces for service dependencies to improve testability
 
 ## Configuration and Environment
 
