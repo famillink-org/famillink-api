@@ -1,6 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { MemberService } from '../../../core/data/member/services/member.service';
-import { UserService } from '../../../core/data/user/services/user.service';
+import { Injectable, Inject } from '@nestjs/common';
+import { IMemberService } from '../../../core/data/member/interfaces/member.service.interface';
+import { MEMBER_SERVICE_TOKEN } from '../../../core/data/member/interfaces/member.service.token';
+import { IUserService } from '../../../core/data/user/interfaces/user.service.interface';
+import { USER_SERVICE_TOKEN } from '../../../core/data/user/interfaces/user.service.token';
 import { TokenEngineService } from '../../../core/token/token.engine.service';
 import { ConfigService } from '@nestjs/config';
 import { MailsService } from '../../../core/mails/mails.service';
@@ -27,8 +29,10 @@ import { NotFoundException } from '../../../core/exceptions';
 @Injectable()
 export class ImportEngineService {
   constructor(
-    private readonly memberService: MemberService,
-    private readonly userService: UserService,
+    @Inject(MEMBER_SERVICE_TOKEN)
+    private readonly memberService: IMemberService,
+    @Inject(USER_SERVICE_TOKEN)
+    private readonly userService: IUserService,
     private readonly tokensEngine: TokenEngineService,
     private readonly configService: ConfigService,
     private readonly mailsService: MailsService,

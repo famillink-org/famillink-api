@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
-import { MemberService } from '../../../core/data/member/services/member.service';
+import { Injectable, Inject } from '@nestjs/common';
+import { IMemberService } from '../../../core/data/member/interfaces/member.service.interface';
+import { MEMBER_SERVICE_TOKEN } from '../../../core/data/member/interfaces/member.service.token';
 import { PaginationParamsDto } from '../../../core/dto/pagination-params.dto';
 import { PaginatedResponseDto } from '../../../core/dto/paginated-response.dto';
 import { MemberListItemDto } from '../dto/member-list-item.dto';
@@ -12,7 +13,10 @@ import { MemberListItemDto } from '../dto/member-list-item.dto';
  */
 @Injectable()
 export class MembersEngineService {
-  constructor(private readonly memberService: MemberService) {}
+  constructor(
+    @Inject(MEMBER_SERVICE_TOKEN)
+    private readonly memberService: IMemberService,
+  ) {}
 
   /**
    * Récupère une liste paginée de membres
