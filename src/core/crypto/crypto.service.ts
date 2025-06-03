@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import * as process from 'node:process';
+import { ConfigService } from '@nestjs/config';
 import {
   createCipheriv,
   createDecipheriv,
@@ -8,11 +8,13 @@ import {
   scrypt,
 } from 'crypto';
 import bcrypt from 'bcrypt';
+import { InternalServerErrorException } from '../exceptions';
 
 const SALT_ROUNDS = 10;
 
 @Injectable()
 export class CryptoService {
+  constructor(private readonly configService: ConfigService) {}
   hash(text: string): Promise<string> {
     return bcrypt.hash(text, SALT_ROUNDS);
   }
@@ -39,9 +41,13 @@ export class CryptoService {
   private async _encrypt(text: string): Promise<string> {
     const algorithm = 'aes-192-cbc';
     const salt = randomBytes(8).toString('hex');
+    const encryptPassword = this.configService.get<string>('ENCRYPT_PASSWORD');
 
+    if (!encryptPassword) {
+      throw new InternalServerErrorException('ENCRYPT_PASSWORD not set');
+    }
     return new Promise((resolve, reject) => {
-      scrypt(process.env.ENCRYPT_PASSWORD as string, salt, 24, (err, key) => {
+      scrypt(encryptPassword, salt, 24, (err, key) => {
         if (err) reject(err);
         randomFill(new Uint8Array(16), (err, iv) => {
           const ivHex = Buffer.from(iv).toString('hex');
@@ -58,12 +64,16 @@ export class CryptoService {
 
   private async _decrypt(text: string): Promise<string> {
     const algorithm = 'aes-192-cbc';
+    const encryptPassword = this.configService.get<string>('ENCRYPT_PASSWORD');
 
+    if (!encryptPassword) {
+      throw new InternalServerErrorException('ENCRYPT_PASSWORD not set');
+    }
     return new Promise((resolve, reject) => {
       const [salt, ivHex, encrypted] = text.split('|');
       if (!salt || !ivHex || !encrypted) reject(new Error('Invalid data'));
       const iv = Buffer.from(ivHex, 'hex');
-      scrypt(process.env.ENCRYPT_PASSWORD as string, salt, 24, (err, key) => {
+      scrypt(encryptPassword, salt, 24, (err, key) => {
         if (err) reject(err);
         const decipher = createDecipheriv(algorithm, key, iv);
         let decrypted = decipher.update(encrypted, 'hex', 'utf8');

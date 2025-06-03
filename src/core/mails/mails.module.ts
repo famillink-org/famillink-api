@@ -28,7 +28,7 @@ export class MailsModule {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
             const provider = configService.get('EMAIL_PROVIDER');
             return provider === 'brevo'
-              ? new BrevoProvider()
+              ? new BrevoProvider(configService)
               : new TestProvider();
           },
           inject: [ConfigService],

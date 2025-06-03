@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Logger,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Request, Response } from 'express';
 import { ValidationException } from '../exceptions';
 
@@ -17,6 +18,8 @@ import { ValidationException } from '../exceptions';
 @Catch()
 export class GlobalExceptionFilter implements ExceptionFilter {
   private readonly logger = new Logger(GlobalExceptionFilter.name);
+
+  constructor(private readonly configService: ConfigService) {}
 
   catch(exception: unknown, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
@@ -57,7 +60,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       message = exception.message;
 
       // Include stack trace in development mode
-      if (process.env.NODE_ENV !== 'production') {
+      if (this.configService.get<string>('NODE_ENV') !== 'production') {
         stack = exception.stack;
       }
     }
@@ -83,7 +86,7 @@ export class GlobalExceptionFilter implements ExceptionFilter {
     }
 
     // Add stack trace in development mode
-    if (stack && process.env.NODE_ENV !== 'production') {
+    if (stack && this.configService.get<string>('NODE_ENV') !== 'production') {
       Object.assign(errorResponse, { stack });
     }
 
