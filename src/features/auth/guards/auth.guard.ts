@@ -4,12 +4,12 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { IS_PUBLIC_KEY } from '../../../core/decorators/public.decorator';
 import { Request } from 'express';
 import { AuthService } from '../services/auth.service';
 import { Reflector } from '@nestjs/core';
-import * as process from 'node:process';
 import { IS_API_KEY } from '../../../core/decorators/useApiKey.decorator';
 
 @Injectable()
@@ -18,6 +18,7 @@ export class AuthGuard implements CanActivate {
     private readonly authService: AuthService,
     private readonly jwtService: JwtService,
     private readonly reflector: Reflector,
+    private readonly configService: ConfigService,
   ) {}
 
   public async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -45,7 +46,7 @@ export class AuthGuard implements CanActivate {
   }
 
   private verifyApiKey(context: ExecutionContext) {
-    const apiKey = process.env['INTERNAL_API_KEY'];
+    const apiKey = this.configService.get<string>('INTERNAL_API_KEY');
     const request: Request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {

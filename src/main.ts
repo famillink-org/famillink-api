@@ -41,7 +41,8 @@ async function bootstrap() {
   );
 
   // Register global exception filter
-  app.useGlobalFilters(new GlobalExceptionFilter());
+  const globalExceptionFilter = new GlobalExceptionFilter(configService);
+  app.useGlobalFilters(globalExceptionFilter);
 
   // Configure API versioning
   app.enableVersioning({
@@ -66,6 +67,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   // Start the application
-  await app.listen(process.env.PORT ?? 3000);
+  const port = configService.get<number>('PORT', 3000);
+  await app.listen(port);
 }
 void bootstrap();

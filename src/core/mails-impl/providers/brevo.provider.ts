@@ -5,11 +5,13 @@ import {
 import { TransactionalEmailsApiApiKeys } from '@getbrevo/brevo';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import brevo = require('@getbrevo/brevo');
-import * as process from 'node:process';
 import { Logger } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 export class BrevoProvider implements IEmailsProvider {
   private readonly logger = new Logger(BrevoProvider.name);
+
+  constructor(private readonly configService: ConfigService) {}
 
   async sendEmail(
     to: string,
@@ -19,7 +21,7 @@ export class BrevoProvider implements IEmailsProvider {
     const transactionalApi = new brevo.TransactionalEmailsApi();
     transactionalApi.setApiKey(
       TransactionalEmailsApiApiKeys.apiKey,
-      (process.env.BREVO_API_KEY as string) || '',
+      this.configService.get<string>('BREVO_API_KEY') || '',
     );
 
     const emailData: brevo.SendSmtpEmail = {
