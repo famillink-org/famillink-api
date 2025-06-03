@@ -1,7 +1,7 @@
 import {
   EmailResponse,
   IEmailsProvider,
-} from '../../mails-interface/mails-provider.interface';
+} from '../../interfaces/mails-provider.interface';
 
 export class TestProvider implements IEmailsProvider {
   async sendEmail(

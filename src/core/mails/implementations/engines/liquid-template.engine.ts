@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Liquid } from 'liquidjs';
-import { IMailsTemplateEngine } from '../../mails-interface/mails-template.engine.interface';
-import { InternalServerErrorException } from '../../exceptions';
+import { IMailsTemplateEngine } from '../../interfaces/mails-template.engine.interface';
+import { InternalServerErrorException } from '../../../exceptions';
 
 @Injectable()
 export class LiquidTemplateEngine implements IMailsTemplateEngine {

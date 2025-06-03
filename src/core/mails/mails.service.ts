@@ -3,9 +3,9 @@ import { INJECTION_TOKENS } from './injection-token';
 import {
   EmailResponse,
   IEmailsProvider,
-} from '../mails-interface/mails-provider.interface';
-import { IMailsTemplateEngine } from '../mails-interface/mails-template.engine.interface';
-import { IMailsTemplateService } from '../mails-interface/mails-template.service.interface';
+} from './interfaces/mails-provider.interface';
+import { IMailsTemplateEngine } from './interfaces/mails-template.engine.interface';
+import { IMailsTemplateService } from './interfaces/mails-template.service.interface';
 
 export interface EmailData {
   to: string;
