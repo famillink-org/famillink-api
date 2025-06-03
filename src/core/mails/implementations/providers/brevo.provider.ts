@@ -1,7 +1,7 @@
 import {
   EmailResponse,
   IEmailsProvider,
-} from '../../mails-interface/mails-provider.interface';
+} from '../../interfaces/mails-provider.interface';
 import { TransactionalEmailsApiApiKeys } from '@getbrevo/brevo';
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 import brevo = require('@getbrevo/brevo');

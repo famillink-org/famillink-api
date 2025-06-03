@@ -2,25 +2,20 @@ import { DynamicModule, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { MailsTemplateEntity } from '../data/mails/entities/mails-template.entity';
-import { INJECTION_TOKENS } from './injection-token';
-import { LiquidTemplateEngine } from '../mails-impl/engines/liquid-template.engine';
-import { MailsService } from './mails.service';
-import { BrevoProvider } from '../mails-impl/providers/brevo.provider';
-import { TestProvider } from '../mails-impl/providers/test.provider';
-import { MailsImplModule } from '../mails-impl/mails-impl.module';
+import { LiquidTemplateEngine } from './implementations/engines/liquid-template.engine';
+import { BrevoProvider } from './implementations/providers/brevo.provider';
+import { TestProvider } from './implementations/providers/test.provider';
 import { MailsTemplateService } from '../data/mails/services/mails-template.service';
 import { DataModule } from '../data/data.module';
+import { INJECTION_TOKENS } from './injection-token';
+import { MailsService } from './mails.service';
 
 @Module({})
 export class MailsModule {
   static forRoot(): DynamicModule {
     return {
       module: MailsModule,
-      imports: [
-        DataModule,
-        MailsImplModule,
-        TypeOrmModule.forFeature([MailsTemplateEntity]),
-      ],
+      imports: [DataModule, TypeOrmModule.forFeature([MailsTemplateEntity])],
       providers: [
         {
           provide: INJECTION_TOKENS.EMAIL_PROVIDER,
@@ -43,6 +38,10 @@ export class MailsModule {
           useExisting: MailsTemplateService,
         },
         MailsService,
+        // Make implementations available for other modules
+        LiquidTemplateEngine,
+        BrevoProvider,
+        TestProvider,
       ],
       exports: [MailsService],
     };

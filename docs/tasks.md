@@ -8,17 +8,18 @@ This document contains a comprehensive list of improvement tasks for the FamilLi
    - [x] Move business logic from controllers to engine services
    - [x] Ensure all controller methods use engine services instead of directly using data services
 
-2. [ ] Standardize error handling
-   - [ ] Create custom exception classes for different error types
-   - [ ] Implement global exception filters
-   - [ ] Ensure consistent error response format
+2. [x] Standardize error handling
+   - [x] Create custom exception classes for different error types
+   - [x] Implement global exception filters
+   - [x] Ensure consistent error response format
 
-3. [ ] Improve module organization
-   - [ ] Review and refine module dependencies
-   - [ ] Consider splitting large modules into smaller, focused ones
+3. [x] Improve module organization
+  - [x] Review and refine module dependencies
+  - [x] Consider splitting large modules into smaller, focused ones
+  - [x] Implement the necessary changes
 
 4. [ ] Implement proper dependency injection
-   - [ ] Avoid direct access to process.env, use ConfigService instead
+   - [x] Avoid direct access to process.env, use ConfigService instead
    - [ ] Use interfaces for service dependencies to improve testability
 
 ## Configuration and Environment
